@@ -1,91 +1,189 @@
 <template>
 <div class="city_body">
-				<div class="city_list">
-					<div class="city_hot">
-						<h2>热门城市</h2>
-						<ul class="clearfix">
-							<li>上海</li>
-							<li>北京</li>
-							<li>上海</li>
-							<li>北京</li>
-							<li>上海</li>
-							<li>北京</li>
-							<li>上海</li>
-							<li>北京</li>
-						</ul>
-					</div>
-					<div class="city_sort">
-						<div>
-							<h2>A</h2>
-							<ul>
-								<li>阿拉善盟</li>
-								<li>鞍山</li>
-								<li>安庆</li>
-								<li>安阳</li>
-							</ul>
-						</div>
-						<div>
-							<h2>B</h2>
-							<ul>
-								<li>北京</li>
-								<li>保定</li>
-								<li>蚌埠</li>
-								<li>包头</li>
-							</ul>
-						</div>
-						<div>
-							<h2>A</h2>
-							<ul>
-								<li>阿拉善盟</li>
-								<li>鞍山</li>
-								<li>安庆</li>
-								<li>安阳</li>
-							</ul>
-						</div>
-						<div>
-							<h2>B</h2>
-							<ul>
-								<li>北京</li>
-								<li>保定</li>
-								<li>蚌埠</li>
-								<li>包头</li>
-							</ul>
-						</div>
-						<div>
-							<h2>A</h2>
-							<ul>
-								<li>阿拉善盟</li>
-								<li>鞍山</li>
-								<li>安庆</li>
-								<li>安阳</li>
-							</ul>
-						</div>
-						<div>
-							<h2>B</h2>
-							<ul>
-								<li>北京</li>
-								<li>保定</li>
-								<li>蚌埠</li>
-								<li>包头</li>
-							</ul>
-						</div>	
-					</div>
-				</div>
-				<div class="city_index">
-					<ul>
-						<li>A</li>
-						<li>B</li>
-						<li>C</li>
-						<li>D</li>
-						<li>E</li>
-					</ul>
-				</div>
+	<div class="city_list">
+		<div class="city_hot">
+			<h2>热门城市</h2>
+			<ul class="clearfix">
+				<li v-for="item in hotlist":key="item.id">{{item.nm}}</li>
+			</ul>
+		</div>
+		<div class="city_sort" ref="city_sort">
+			<div v-for="item in citylist":key="item.index">
+				<h2 >{{item.index}}</h2>
+				<ul>
+					<li v-for="itemlist in item.list":key="itemlist.id">{{itemlist.nm}}</li>
+				</ul>
 			</div>
+		</div>
+
+	</div>
+	<div class="city_index">
+		<ul>
+<!--			<li v-for="item in citylist":key="item.index" @touchstart="handleToIndex(item.index)">{{item.index}}</li>-->
+			<li v-for="(item ,i) in citylist":key="item.index" @touchstart="handleToIndex(i)">{{item.index}}</li>
+		</ul>
+	</div>
+<!--				<div class="city_list">-->
+<!--					<div class="city_hot">-->
+<!--						<h2>热门城市</h2>-->
+<!--						<ul class="clearfix">-->
+<!--							<li>上海</li>-->
+<!--							<li>北京</li>-->
+<!--							<li>上海</li>-->
+<!--							<li>北京</li>-->
+<!--							<li>上海</li>-->
+<!--							<li>北京</li>-->
+<!--							<li>上海</li>-->
+<!--							<li>北京</li>-->
+<!--						</ul>-->
+<!--					</div>-->
+<!--					<div class="city_sort">-->
+<!--						<div>-->
+<!--							<h2>A</h2>-->
+<!--							<ul>-->
+<!--								<li>阿拉善盟</li>-->
+<!--								<li>鞍山</li>-->
+<!--								<li>安庆</li>-->
+<!--								<li>安阳</li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div>-->
+<!--							<h2>B</h2>-->
+<!--							<ul>-->
+<!--								<li>北京</li>-->
+<!--								<li>保定</li>-->
+<!--								<li>蚌埠</li>-->
+<!--								<li>包头</li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div>-->
+<!--							<h2>A</h2>-->
+<!--							<ul>-->
+<!--								<li>阿拉善盟</li>-->
+<!--								<li>鞍山</li>-->
+<!--								<li>安庆</li>-->
+<!--								<li>安阳</li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div>-->
+<!--							<h2>B</h2>-->
+<!--							<ul>-->
+<!--								<li>北京</li>-->
+<!--								<li>保定</li>-->
+<!--								<li>蚌埠</li>-->
+<!--								<li>包头</li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div>-->
+<!--							<h2>A</h2>-->
+<!--							<ul>-->
+<!--								<li>阿拉善盟</li>-->
+<!--								<li>鞍山</li>-->
+<!--								<li>安庆</li>-->
+<!--								<li>安阳</li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div>-->
+<!--							<h2>B</h2>-->
+<!--							<ul>-->
+<!--								<li>北京</li>-->
+<!--								<li>保定</li>-->
+<!--								<li>蚌埠</li>-->
+<!--								<li>包头</li>-->
+<!--							</ul>-->
+<!--						</div>	-->
+<!--					</div>-->
+<!--				</div>-->
+<!--				<div class="city_index">-->
+<!--					<ul>-->
+<!--						<li>A</li>-->
+<!--						<li>B</li>-->
+<!--						<li>C</li>-->
+<!--						<li>D</li>-->
+<!--						<li>E</li>-->
+<!--					</ul>-->
+<!--				</div>-->
+</div>
 </template>
 
 <script>
 export default {
-   name:'City'
+   name:'City',
+	data(){
+		return{
+			citylist: [],
+			hotlist: []
+		}
+	},
+	mounted() {
+   		this.axios.get('/api/cityList').then((res)=>{
+   			console.log(res);
+   			var msg=res.data.msg;
+   			if(msg==='ok'){
+   				var cities=res.data.data.cities;
+   				//[{index:'A',list:}]
+				var {citylist,hotlist}=this.formatCityList(cities);
+				this.citylist=citylist;
+				this.hotlist=hotlist;
+			}
+		});
+	},
+	methods:{
+   		formatCityList(cities){
+   			var citylist=[];
+   			var hotlist=[];
+   			for(var i=0;i<cities.length;++i){
+   				if(cities[i].isHot==1){
+   					hotlist.push(cities[i])
+				}
+			}
+   			console.log(hotlist);
+   			for(var i=0;i<cities.length;++i){
+   				var firstLetter=cities[i].py.substring(0,1).toUpperCase();
+   				if(toCom(firstLetter)){
+					citylist.push({index:firstLetter,list:[{nm:cities[i].nm,id:cities[i].id}]});
+				}else{
+					for(var j=0;j<citylist.length;++j){
+						if(citylist[j].index===firstLetter){
+							citylist[j].list.push({nm:cities[i].nm,id:cities[i].id});
+						}
+					}
+				}
+			}
+   			citylist.sort((n1,n2)=>{
+   				if(n1.index>n2.index){
+   					return 1;
+				}else if(n1.index<n2.index){
+					return -1;
+				}else{
+					return 0;
+				}
+			});
+   			function toCom(firstLetter) {
+				for(var i=0;i<citylist.length;++i){
+					if(citylist[i].index===firstLetter){
+						return false;
+					}
+				}
+				return true;
+			}
+   			console.log(citylist);
+   			return {citylist,hotlist};
+		},
+		handleToIndex(index){
+			console.log(index);
+			var h2=this.$refs.city_sort.getElementsByTagName('h2');
+			// for(var i=0;i<h2.length;++i){
+			// 	if(h2[i].innerHTML===index){
+			// 		this.$refs.city_sort.parentNode.scrollTop=h2[i].offsetTop;
+			// 		break;
+			// 	}
+			// }
+			this.$refs.city_sort.parentNode.scrollTop=h2[index].offsetTop;
+
+		}
+	}
+
 }
 </script>
 
