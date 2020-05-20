@@ -1,7 +1,8 @@
 <template>
     <div class="movie_body" ref="movie_body">
 <!--        父控件传递子控件-->
-        <Scroller :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd">
+        <Loading v-if="isLoading"/>
+        <Scroller v-else :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd">
             <ul>
                 <li class="pullDown">{{pullDonwMsg}}</li>
                 <li v-for="item in movieList":key="item.id">
@@ -30,15 +31,22 @@ export default {
     data(){
       return{
           movieList:[],
-          pullDonwMsg:''
+          pullDonwMsg:'',
+          isLoading:true,
+          preCityId:-1
       }
     },
-    mounted() {
-        this.axios.get('/api/movieOnInfoList?cityId=10').then((res)=>{
+    activated() {
+        var cityId=this.$store.state.city.id;
+        if(this.preCityId===cityId){return;}
+        this.isLoading=true;
+        this.axios.get('/api/movieOnInfoList?cityId='+cityId).then((res)=>{
             var msg=res.data.msg;
             if(msg==='ok'){
                 this.movieList=res.data.data.movieList;
                 console.log(this.movieList);
+                this.isLoading=false;
+                this.preCityId=cityId;
                 //保证界面渲染完毕后在进行回调
                 // this.$nextTick(()=>{
                 //     var scroll=new BScroll(this.$refs.movie_body,{

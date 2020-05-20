@@ -12,6 +12,11 @@ Vue.filter('setWH',(url,arg)=>{
 
 import  Scroller from '@/components/Scroller'
 Vue.component('Scroller',Scroller);//全局组件
+
+import Loading from '@/components/Loading'
+
+Vue.component('Loading',Loading);
+
 Vue.config.productionTip = false
 
 new Vue({

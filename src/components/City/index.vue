@@ -1,109 +1,38 @@
 <template>
+
 <div class="city_body">
+
 	<div class="city_list">
-		<div class="city_hot">
-			<h2>热门城市</h2>
-			<ul class="clearfix">
-				<li v-for="item in hotlist":key="item.id">{{item.nm}}</li>
-			</ul>
-		</div>
-		<div class="city_sort" ref="city_sort">
-			<div v-for="item in citylist":key="item.index">
-				<h2 >{{item.index}}</h2>
-				<ul>
-					<li v-for="itemlist in item.list":key="itemlist.id">{{itemlist.nm}}</li>
+		<Loading v-if="isLoading"></Loading>
+		<Scroller v-else ref="city_List">
+			<div>
+			<div class="city_hot">
+				<h2>热门城市</h2>
+				<ul class="clearfix">
+					<li v-for="item in hotlist":key="item.id" @tap="handleToCity(item.nm,item.id)">{{item.nm}}</li>
 				</ul>
 			</div>
-		</div>
-
+			<div class="city_sort" ref="city_sort">
+				<div v-for="item in citylist":key="item.index">
+					<h2 >{{item.index}}</h2>
+					<ul>
+						<li v-for="itemlist in item.list":key="itemlist.id" @tap="handleToCity(itemlist.nm,itemlist.id)">{{itemlist.nm}}</li>
+					</ul>
+				</div>
+			</div>
+			</div>
+		</Scroller>
 	</div>
+
 	<div class="city_index">
 		<ul>
 <!--			<li v-for="item in citylist":key="item.index" @touchstart="handleToIndex(item.index)">{{item.index}}</li>-->
 			<li v-for="(item ,i) in citylist":key="item.index" @touchstart="handleToIndex(i)">{{item.index}}</li>
 		</ul>
 	</div>
-<!--				<div class="city_list">-->
-<!--					<div class="city_hot">-->
-<!--						<h2>热门城市</h2>-->
-<!--						<ul class="clearfix">-->
-<!--							<li>上海</li>-->
-<!--							<li>北京</li>-->
-<!--							<li>上海</li>-->
-<!--							<li>北京</li>-->
-<!--							<li>上海</li>-->
-<!--							<li>北京</li>-->
-<!--							<li>上海</li>-->
-<!--							<li>北京</li>-->
-<!--						</ul>-->
-<!--					</div>-->
-<!--					<div class="city_sort">-->
-<!--						<div>-->
-<!--							<h2>A</h2>-->
-<!--							<ul>-->
-<!--								<li>阿拉善盟</li>-->
-<!--								<li>鞍山</li>-->
-<!--								<li>安庆</li>-->
-<!--								<li>安阳</li>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--						<div>-->
-<!--							<h2>B</h2>-->
-<!--							<ul>-->
-<!--								<li>北京</li>-->
-<!--								<li>保定</li>-->
-<!--								<li>蚌埠</li>-->
-<!--								<li>包头</li>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--						<div>-->
-<!--							<h2>A</h2>-->
-<!--							<ul>-->
-<!--								<li>阿拉善盟</li>-->
-<!--								<li>鞍山</li>-->
-<!--								<li>安庆</li>-->
-<!--								<li>安阳</li>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--						<div>-->
-<!--							<h2>B</h2>-->
-<!--							<ul>-->
-<!--								<li>北京</li>-->
-<!--								<li>保定</li>-->
-<!--								<li>蚌埠</li>-->
-<!--								<li>包头</li>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--						<div>-->
-<!--							<h2>A</h2>-->
-<!--							<ul>-->
-<!--								<li>阿拉善盟</li>-->
-<!--								<li>鞍山</li>-->
-<!--								<li>安庆</li>-->
-<!--								<li>安阳</li>-->
-<!--							</ul>-->
-<!--						</div>-->
-<!--						<div>-->
-<!--							<h2>B</h2>-->
-<!--							<ul>-->
-<!--								<li>北京</li>-->
-<!--								<li>保定</li>-->
-<!--								<li>蚌埠</li>-->
-<!--								<li>包头</li>-->
-<!--							</ul>-->
-<!--						</div>	-->
-<!--					</div>-->
-<!--				</div>-->
-<!--				<div class="city_index">-->
-<!--					<ul>-->
-<!--						<li>A</li>-->
-<!--						<li>B</li>-->
-<!--						<li>C</li>-->
-<!--						<li>D</li>-->
-<!--						<li>E</li>-->
-<!--					</ul>-->
-<!--				</div>-->
+
 </div>
+
 </template>
 
 <script>
@@ -112,21 +41,36 @@ export default {
 	data(){
 		return{
 			citylist: [],
-			hotlist: []
+			hotlist: [],
+			isLoading:true
 		}
 	},
 	mounted() {
-   		this.axios.get('/api/cityList').then((res)=>{
-   			console.log(res);
-   			var msg=res.data.msg;
-   			if(msg==='ok'){
-   				var cities=res.data.data.cities;
-   				//[{index:'A',list:}]
-				var {citylist,hotlist}=this.formatCityList(cities);
-				this.citylist=citylist;
-				this.hotlist=hotlist;
-			}
-		});
+
+   		var cityList=window.localStorage.getItem('cityList');
+   		var hotList=window.localStorage.getItem('hotList');
+   		if(cityList&&hotList){
+   			this.citylist=JSON.parse(cityList);
+   			this.hotlist=JSON.parse(hotList);
+   			this.isLoading=false;
+		}else{
+			this.axios.get('/api/cityList').then((res)=>{
+				console.log(res);
+				var msg=res.data.msg;
+				if(msg==='ok'){
+					var cities=res.data.data.cities;
+					//[{index:'A',list:}]
+					var {citylist,hotlist}=this.formatCityList(cities);
+					this.citylist=citylist;
+					this.hotlist=hotlist;
+					this.isLoading=false;
+					//不能直接存json 只能存string
+					window.localStorage.setItem('cityList',JSON.stringify(citylist));
+					window.localStorage.setItem('hotList',JSON.stringify(hotlist));
+				}
+			});
+		}
+
 	},
 	methods:{
    		formatCityList(cities){
@@ -179,8 +123,16 @@ export default {
 			// 		break;
 			// 	}
 			// }
+			//this.$refs.city_List.toScrollTop(-h2[index].offsetTop);
 			this.$refs.city_sort.parentNode.scrollTop=h2[index].offsetTop;
 
+		},
+		handleToCity(nm,id){
+   			console.log(nm);
+   			this.$store.commit('city/CITY_INFO',{nm,id});
+   			window.localStorage.setItem('nowNm',nm);
+   			window.localStorage.setItem('nowId',id);
+   			this.$router.push('/movie/nowPlaying');
 		}
 	}
 

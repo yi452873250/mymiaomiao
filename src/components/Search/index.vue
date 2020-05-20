@@ -44,10 +44,12 @@ export default {
 		message(newVal){//防止多次触发的操作
 			var that=this;
 			console.log(newVal);
+			var cityId=this.$store.state.city.id;
+
 			this.cancelRequest();
 			//clearTimeout();
 			//setTimeout();
-			this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+			this.axios.get('/api/searchList?cityId='+cityId+'&kw='+newVal,{
 				cancelToken:new this.axios.CancelToken(function executor(c){
 					console.log('sdsd');
 					that.source=c;
