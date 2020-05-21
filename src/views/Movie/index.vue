@@ -19,18 +19,54 @@
             </keep-alive>
         </div>
         <Footer/>
+
     </div>
 </template>
 <script>
 
     import Header from '@/components/Header'
     import Footer from '@/components/TabBar'
-
+    import {messageBox} from "../../components/JS";
+    //import MessageBox from '@/components/JS/MessageBox'
+    //import MessageBox from "../../components/JS/MessageBox/index";
     export default {
         name: 'Movie',
         components: {
+
             Header,
             Footer
+        },
+        mounted() {
+            setTimeout(()=>{
+                this.axios.get('/api/getLocation').then((res)=>{
+                    var msg=res.data.msg;
+                    if(msg==='ok'){
+                        var nm=res.data.data.nm;
+                        var id=res.data.data.id;
+                        var storeNm=window.localStorage.getItem('nowNm');
+                        if(nm===storeNm){
+                            return;
+                        }
+                        messageBox({
+                            title:'定位',
+                            content:nm,
+                            cancel:'取消',
+                            ok:'切换定位',
+                            handleCanel() {
+                                console.log(1);
+                            },
+                            handleOk() {
+                                console.log(2);
+                                window.localStorage.setItem('nowNm',nm);
+                                window.localStorage.setItem('nowId',id);
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            },3000);
+
+
         }
     }
 </script>
