@@ -20,6 +20,8 @@
         </div>
         <Footer/>
 
+        <router-view name="detail"/>
+
     </div>
 </template>
 <script>
